@@ -2,11 +2,17 @@ import SwiftUI
 import SwiftData
 
 struct MoodHistoryView: View {
-    @Query(sort: \MoodEntry.date, order: .reverse) private var moodEntries: [MoodEntry]
     @Environment(\.modelContext) private var modelContext
+    @Query private var moodEntries: [MoodEntry]
     @State private var selectedEntry: MoodEntry?
     @State private var showDeleteAlert = false
     @State private var entryToDelete: IndexSet?
+    
+    init() {
+        let sortDescriptor = SortDescriptor<MoodEntry>(\.date, order: .reverse)
+        let descriptor = FetchDescriptor<MoodEntry>(sortBy: [sortDescriptor])
+        _moodEntries = Query(descriptor)
+    }
     
     var body: some View {
         Group {

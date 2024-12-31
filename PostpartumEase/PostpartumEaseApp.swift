@@ -15,8 +15,13 @@ struct PostpartumEaseApp: App {
     init() {
         do {
             let schema = Schema([MoodEntry.self])
-            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-            container = try ModelContainer(for: schema, configurations: config)
+            let modelConfiguration = ModelConfiguration(
+                schema: schema,
+                isStoredInMemoryOnly: false,
+                allowsSave: true,
+                cloudKitDatabase: .none  // Explicitly disable CloudKit
+            )
+            container = try ModelContainer(for: schema, configurations: modelConfiguration)
         } catch {
             print("Failed to initialize ModelContainer: \(error.localizedDescription)")
             fatalError("Failed to initialize ModelContainer")
